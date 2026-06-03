@@ -1,0 +1,63 @@
+[package]
+name = "rustfs-targets"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+homepage.workspace = true
+description = "Notification target abstraction and implementations for RustFS"
+keywords = ["file-system", "notification", "target", "rustfs", "Minio"]
+categories = ["web-programming", "development-tools", "filesystem"]
+documentation = "https://docs.rs/rustfs-targets/latest/rustfs_targets/"
+
+[dependencies]
+rustfs-config = { workspace = true, features = ["notify", "constants", "audit"] }
+rustfs-ecstore = { workspace = true }
+rustfs-tls-runtime = { workspace = true }
+rustfs-s3-types = { workspace = true }
+async-trait = { workspace = true }
+async-nats = { workspace = true }
+deadpool-postgres = { workspace = true }
+hyper = { workspace = true }
+hyper-rustls = { workspace = true }
+lapin = { workspace = true }
+libc = { workspace = true }
+pulsar = { workspace = true }
+regex = { workspace = true }
+reqwest = { workspace = true }
+rumqttc = { workspace = true }
+redis = { workspace = true }
+rustls = { workspace = true }
+rustls-native-certs = { workspace = true }
+s3s = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+snap = { workspace = true }
+thiserror = { workspace = true }
+tokio = { workspace = true, features = ["fs", "rt-multi-thread", "sync", "time"] }
+tokio-postgres = { workspace = true }
+tokio-postgres-rustls = { workspace = true }
+tracing = { workspace = true }
+url = { workspace = true }
+urlencoding = { workspace = true }
+uuid = { workspace = true, features = ["v4", "serde"] }
+sysinfo = { workspace = true, features = ["multithread"] }
+rustfs-kafka-async = { workspace = true }
+mysql_async = { workspace = true }
+chrono = { workspace = true }
+parking_lot = { workspace = true }
+hashbrown = { workspace = true }
+arc-swap = { workspace = true }
+metrics = { workspace = true }
+
+[dev-dependencies]
+criterion = { workspace = true }
+tempfile = { workspace = true }
+
+[[bench]]
+name = "queue_store_benchmark"
+harness = false
+
+[lints]
+workspace = true

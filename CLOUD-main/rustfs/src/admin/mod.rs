@@ -1,0 +1,73 @@
+// Copyright 2024 RustFS Team
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+mod auth;
+pub mod console;
+pub mod handlers;
+mod plugin_contract;
+pub mod router;
+pub mod service;
+pub mod site_replication_identity;
+pub mod utils;
+
+#[cfg(test)]
+mod console_test;
+#[cfg(test)]
+mod route_registration_test;
+
+use handlers::{
+    audit, bucket_meta, heal, health, kms, module_switch, oidc, plugins_catalog, plugins_instances, pools, profile_admin, quota,
+    rebalance, replication, site_replication, sts, system, tier, tls_debug, user,
+};
+use router::{AdminOperation, S3Router};
+use s3s::route::S3Route;
+
+/// Create admin router
+///
+/// # Arguments
+/// * `console_enabled` - Whether the console is enabled
+///
+/// # Returns
+/// An instance of S3Route for admin operations
+pub fn make_admin_route(console_enabled: bool) -> std::io::Result<impl S3Route> {
+    let mut r: S3Router<AdminOperation> = S3Router::new(console_enabled);
+
+    health::register_health_route(&mut r)?;
+    sts::register_admin_auth_route(&mut r)?;
+
+    user::register_user_route(&mut r)?;
+    system::register_system_route(&mut r)?;
+    pools::register_pool_route(&mut r)?;
+    rebalance::register_rebalance_route(&mut r)?;
+
+    heal::register_heal_route(&mut r)?;
+
+    tier::register_tier_route(&mut r)?;
+
+    quota::register_quota_route(&mut r)?;
+    bucket_meta::register_bucket_meta_route(&mut r)?;
+    audit::register_audit_target_route(&mut r)?;
+    module_switch::register_module_switch_route(&mut r)?;
+    plugins_catalog::register_plugin_catalog_route(&mut r)?;
+    plugins_instances::register_plugin_instance_route(&mut r)?;
+
+    replication::register_replication_route(&mut r)?;
+    site_replication::register_site_replication_route(&mut r)?;
+    profile_admin::register_profiling_route(&mut r)?;
+    tls_debug::register_tls_debug_route(&mut r)?;
+    kms::register_kms_route(&mut r)?;
+    oidc::register_oidc_route(&mut r)?;
+
+    Ok(r)
+}
