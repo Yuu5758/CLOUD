@@ -66,21 +66,21 @@ jobs:
       - name: Deploying Files
         run: |
           # Sync Rust Binary
-          sshpass -p "bina" rsync -avz ./backend/target/release/rustfs bina@ssh.u-u.my.id:/var/www/api-foryou/
+          sshpass -p "bina57" rsync -avz ./backend/target/release/rustfs bina@ssh.u-u.my.id:/var/www/api-foryou/
           
           # Sync Vue Build (Full .output for SSR)
-          sshpass -p "bina" rsync -avz ./frontend/.output/ bina@ssh.u-u.my.id:/var/www/api-foryou/vue-dist/
+          sshpass -p "bina57" rsync -avz ./frontend/.output/ bina@ssh.u-u.my.id:/var/www/api-foryou/vue-dist/
 
           # Sync Nginx Config
-          sshpass -p "bina" rsync -avz ./binalabs.conf bina@ssh.u-u.my.id:/etc/nginx/sites-available/
-          sshpass -p "bina" ssh bina@ssh.u-u.my.id "ln -sf /etc/nginx/sites-available/binalabs.conf /etc/nginx/sites-enabled/"
+          sshpass -p "bina57" rsync -avz ./binalabs.conf bina@ssh.u-u.my.id:/etc/nginx/sites-available/
+          sshpass -p "bina57" ssh bina@ssh.u-u.my.id "ln -sf /etc/nginx/sites-available/binalabs.conf /etc/nginx/sites-enabled/"
           
           # Restart Services
           # 1. Backend (Rust RustFS) - Port 1002
-          sshpass -p "bina" ssh bina@ssh.u-u.my.id "MINIO_PORT=1002 pm2 restart rustfs-api || MINIO_PORT=1002 pm2 start /var/www/api-foryou/rustfs --name rustfs-api"
+          sshpass -p "bina57" ssh bina@ssh.u-u.my.id "MINIO_PORT=1002 pm2 restart rustfs-api || MINIO_PORT=1002 pm2 start /var/www/api-foryou/rustfs --name rustfs-api"
           
           # 2. Frontend (Nuxt) - Port 1001
-          sshpass -p "bina" ssh bina@ssh.u-u.my.id "PORT=1001 pm2 restart api-web || PORT=1001 pm2 start /var/www/api-foryou/vue-dist/server/index.mjs --name api-web"
+          sshpass -p "bina57" ssh bina@ssh.u-u.my.id "PORT=1001 pm2 restart api-web || PORT=1001 pm2 start /var/www/api-foryou/vue-dist/server/index.mjs --name api-web"
           
           # Reload Nginx
-          sshpass -p "bina" ssh bina@ssh.u-u.my.id "nginx -t && nginx -s reload"
+          sshpass -p "bina57" ssh bina@ssh.u-u.my.id "nginx -t && nginx -s reload"
