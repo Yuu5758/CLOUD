@@ -55,7 +55,7 @@ use std::collections::HashMap;
 use std::error::Error;
 use std::fmt;
 use std::path::Path;
-use std::str::FromStr as _;
+use std::str::FromStr;
 use std::sync::Arc;
 use std::sync::OnceLock;
 use std::time::{Duration, Instant};
