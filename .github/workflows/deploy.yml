@@ -65,15 +65,23 @@ jobs:
 
       - name: Deploying Files
         run: |
+          # Create target directory and grant permissions to bina
+          sshpass -p "bina57" ssh bina@ssh.u-u.my.id "sudo mkdir -p /var/www/api-foryou && sudo chown -R bina:bina /var/www/api-foryou"
+
           # Sync Rust Binary
           sshpass -p "bina57" rsync -avz ./backend/target/release/rustfs bina@ssh.u-u.my.id:/var/www/api-foryou/
           
           # Sync Vue Build (Full .output for SSR)
           sshpass -p "bina57" rsync -avz ./frontend/.output/ bina@ssh.u-u.my.id:/var/www/api-foryou/vue-dist/
 
-          # Sync Nginx Config
-          sshpass -p "bina57" rsync -avz ./binalabs.conf bina@ssh.u-u.my.id:/etc/nginx/sites-available/
-          sshpass -p "bina57" ssh bina@ssh.u-u.my.id "ln -sf /etc/nginx/sites-available/binalabs.conf /etc/nginx/sites-enabled/"
+          # Sync Nginx Config (Upload to home folder first)
+          sshpass -p "bina57" rsync -avz ./binalabs.conf bina@ssh.u-u.my.id:~/binalabs.conf
+          
+          # Move Nginx Config to correct directory and symlink using sudo
+          sshpass -p "bina57" ssh bina@ssh.u-u.my.id "
+            sudo mv ~/binalabs.conf /etc/nginx/sites-available/binalabs.conf
+            sudo ln -sf /etc/nginx/sites-available/binalabs.conf /etc/nginx/sites-enabled/
+          "
           
           # Restart Services
           # 1. Backend (Rust RustFS) - Port 1002
@@ -83,4 +91,4 @@ jobs:
           sshpass -p "bina57" ssh bina@ssh.u-u.my.id "PORT=1001 pm2 restart api-web || PORT=1001 pm2 start /var/www/api-foryou/vue-dist/server/index.mjs --name api-web"
           
           # Reload Nginx
-          sshpass -p "bina57" ssh bina@ssh.u-u.my.id "nginx -t && nginx -s reload"
+          sshpass -p "bina57" ssh bina@ssh.u-u.my.id "sudo nginx -t && sudo systemctl reload nginx"
