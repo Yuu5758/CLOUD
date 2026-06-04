@@ -52,9 +52,19 @@ if (-not $env:RUST_LOG)
 
 $env:RUSTFS_VOLUMES = "./target/volume/test{1...4}"
 # $env:RUSTFS_VOLUMES = "./target/volume/test"
+$env:RUSTFS_UNSAFE_BYPASS_DISK_CHECK = "true"
 $env:RUSTFS_ADDRESS = ":9000"
 $env:RUSTFS_CONSOLE_ENABLE = "true"
 $env:RUSTFS_CONSOLE_ADDRESS = ":9001"
+if (-not $env:RUSTFS_CORS_ALLOWED_ORIGINS)
+{
+    $console_port = "9001"
+    if ($env:RUSTFS_CONSOLE_ADDRESS -like "*:*")
+    {
+        $console_port = $env:RUSTFS_CONSOLE_ADDRESS.Split(":")[-1]
+    }
+    $env:RUSTFS_CORS_ALLOWED_ORIGINS = "http://127.0.0.1:$console_port,http://localhost:$console_port,http://127.0.0.1:3000,http://localhost:3000"
+}
 # $env:RUSTFS_SERVER_DOMAINS = "localhost:9000"
 # HTTPS certificate directory
 # $env:RUSTFS_TLS_PATH = "./deploy/certs"
