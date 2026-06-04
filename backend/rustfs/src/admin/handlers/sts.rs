@@ -13,6 +13,7 @@
 // limitations under the License.
 
 use super::is_admin::IsAdminHandler;
+use super::admin_login::AdminLoginHandler;
 use crate::{
     admin::{
         handlers::site_replication::site_replication_iam_change_hook,
@@ -117,6 +118,12 @@ pub fn register_admin_auth_route(r: &mut S3Router<AdminOperation>) -> std::io::R
         Method::GET,
         format!("{}{}", ADMIN_PREFIX, "/v3/is-admin").as_str(),
         AdminOperation(&IsAdminHandler {}),
+    )?;
+
+    r.insert(
+        Method::POST,
+        format!("{}{}", ADMIN_PREFIX, "/v3/login").as_str(),
+        AdminOperation(&AdminLoginHandler {}),
     )?;
 
     Ok(())

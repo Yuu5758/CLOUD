@@ -126,6 +126,8 @@ rustls-pki-types = { workspace = true }
 subtle = { workspace = true }
 jiff = { workspace = true }
 time = { workspace = true, features = ["parsing", "formatting", "serde"] }
+jsonwebtoken = { workspace = true }
+argon2 = { workspace = true }
 
 # Utilities and Tools
 astral-tokio-tar = { workspace = true }

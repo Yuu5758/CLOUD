@@ -2347,6 +2347,11 @@ where
             return Ok(());
         }
 
+        // Allow unauthenticated access to console login endpoint
+        if req.method == Method::POST && (path == "/rustfs/admin/v3/login" || path == "/minio/admin/v3/login") {
+            return Ok(());
+        }
+
         // Allow unauthenticated STS requests to POST / (AssumeRoleWithWebIdentity
         // doesn't use SigV4 — the JWT token in the request body is the authentication).
         // The handler dispatches on the Action parameter: AssumeRole will reject if

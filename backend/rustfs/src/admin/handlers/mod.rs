@@ -13,6 +13,7 @@
 // limitations under the License.
 
 pub mod account_info;
+pub mod admin_login;
 pub mod audit;
 mod audit_runtime_config;
 pub mod bucket_meta;

@@ -8982,6 +8982,7 @@ version = "1.0.0-beta.6"
 dependencies = [
  "aes-gcm",
  "anyhow",
+ "argon2",
  "astral-tokio-tar",
  "async-trait",
  "atoi",
@@ -9007,6 +9008,7 @@ dependencies = [
  "hyper-util",
  "jemalloc_pprof",
  "jiff",
+ "jsonwebtoken",
  "libc",
  "libmimalloc-sys",
  "libsystemd",
